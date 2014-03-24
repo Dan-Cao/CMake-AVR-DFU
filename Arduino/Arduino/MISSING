@@ -1,0 +1,9 @@
+TFT library needs to be updated in order to compile with GCC 4.8
+
+Robot_Motor is a MEGA lib. I use UNO. Including it will need changes in CMakeLists.txt.
+
+Robot_Control requires TFT
+
+GSM also needs to be updated, like TFT
+
+Esplora complains about A11. Don't know what it's talking about.
