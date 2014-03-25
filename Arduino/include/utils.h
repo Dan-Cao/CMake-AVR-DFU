@@ -23,12 +23,35 @@
 #ifndef UTILS_H
 #define UTILS_H
 
-#define true  1
-#define false 0
+typedef uint8_t bool;
+typedef uint8_t boolean;
+typedef uint8_t byte;
 
-#define ITBS(num)      (1 << num)                   // Integer to binary shift
-#define SBIT(reg, bit) ( reg |= ITBS(bit) )         // Set bit
-#define CBIT(reg, bit) ( reg &= ~ITBS(bit) )        // Clear bit
-#define TBIT(reg, bit) ( reg ^= ITBS(bit) )         // Toggle bit
-#define RBIT(reg, bit) ( ( reg & ITBS(bit) ) != 0 ) // Read bit
+#define true  0x1
+#define false 0x0
+
+#define ITBS(num)             (1 << num)                                  // Integer to binary shift
+#define SBIT(reg, bit)        ( reg |= ITBS(bit) )                        // Set bit
+#define CBIT(reg, bit)        ( reg &= ~ITBS(bit) )                       // Clear bit
+#define TBIT(reg, bit)        ( reg ^= ITBS(bit) )                        // Toggle bit
+#define WBIT(reg, bit, value) ( value ? SBIT(reg, bit) : CBIT(reg, bit) ) // Write bit
+#define RBIT(reg, bit)        ( ( reg >> ITBS(bit) ) & 0x1 )              // Read bit
+
+#define PI         3.1415926535897932384626433832795028841971693993751
+#define DEG_TO_RAD 0.0174532925199432957692369076848861271344287188854
+#define RAD_TO_DEG 57.295779513082320876798154814105170332405472466564
+
+#ifdef abs
+ #undef abs
+#endif
+
+#define min(a, b)                                    ( (a) < (b) ? (a) : (b) )
+#define max(a, b)                                    ( (a) > (b) ? (a) : (b) )
+#define abs(x)                                       ( (x) > 0 ? (x) : -(x) )
+#define constrain(amt, low, high)                    ( (amt) < (low) ? (low) : ( (amt) > (high) ? (high) : (amt) ) )
+#define round(x)                                     ( (x) >= 0 ? (long) ( (x) + 0.5 ) : (long) ( (x) - 0.5 ) )
+#define radians(deg)                                 ( (deg) * DEG_TO_RAD )
+#define degrees(rad)                                 ( (rad) * RAD_TO_DEG )
+#define map(value, in_min, in_max, out_min, out_max) ( (value - in_min) * (out_max - out_min) / (in_max - in_min) + out_min )
+
 #endif
