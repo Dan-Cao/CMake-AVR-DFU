@@ -35,7 +35,7 @@ typedef uint8_t byte;
 #define CBIT(reg, bit)        ( reg &= ~ITBS(bit) )                       // Clear bit
 #define TBIT(reg, bit)        ( reg ^= ITBS(bit) )                        // Toggle bit
 #define WBIT(reg, bit, value) ( value ? SBIT(reg, bit) : CBIT(reg, bit) ) // Write bit
-#define RBIT(reg, bit)        ( ( reg >> ITBS(bit) ) & 0x1 )              // Read bit
+#define RBIT(reg, bit)        ( (reg >> bit) & 0x1 )                      // Read bit
 
 #define PI         3.1415926535897932384626433832795028841971693993751
 #define DEG_TO_RAD 0.0174532925199432957692369076848861271344287188854
@@ -53,5 +53,4 @@ typedef uint8_t byte;
 #define radians(deg)                                 ( (deg) * DEG_TO_RAD )
 #define degrees(rad)                                 ( (rad) * RAD_TO_DEG )
 #define map(value, in_min, in_max, out_min, out_max) ( (value - in_min) * (out_max - out_min) / (in_max - in_min) + out_min )
-
 #endif
