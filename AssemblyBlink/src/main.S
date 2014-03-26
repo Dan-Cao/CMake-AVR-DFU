@@ -21,40 +21,50 @@
  */
 
 #include <avr/io.h>
-#include <util/delay.h>
 
-#include "utils.h"
+/*
+ * http://www.nongnu.org/avr-libc/user-manual/group__avr__sfr__notes.html
+ * _SFR_IO_ADDR gets the IO addr of a constant
+ * _SFR_MEM_ADDR get the memory address of a constant
+*/
 
-#define LED      PD7
-#define LED_DDR  DDRD
-#define LED_PORT PORTD
+.global main
 
-#define BTN      PB1   // pin number
-#define BTN_DDR  DDRB  // data direction
-#define BTN_PORT PORTB // for OUTPUT write
-#define BTN_PIN  PINB  // for INPUT read
+.extern delay
 
-#define DELAYTIME 1000
+#define HIGH(x) x >> 8
+#define LOW(x)  x & 0xFF
 
-int main(void)
-{
-    DDRD  = 0xFF; // all ports on D to OUTPUT
-    DDRB  = 0xFF; // all ports on B to OUTPUT
-    PORTD = 0x0;  // all ports on D to LOW
-    PORTB = 0x0;  // all ports on B to LOW
+main:
+    ldi r16, 0xFF
+    out _SFR_IO_ADDR(DDRB), r16
+    out _SFR_IO_ADDR(DDRD), r16
+    
+    ldi r16, 0x0
+    out _SFR_IO_ADDR(PORTB), r16
+    out _SFR_IO_ADDR(PORTD), r16
+    
+    cbi _SFR_IO_ADDR(DDRB),  PB1
+    sbi _SFR_IO_ADDR(PORTB), PB1
+    
+loop:
+    sbic _SFR_IO_ADDR(PINB), PB1
+    rjmp blink
+    
+    cbi _SFR_IO_ADDR(PORTD), PD7
+    rjmp loop
 
-    cbi(BTN_DDR, BTN);          // set BTN port to INPUT
-    sbi(BTN_PORT, BTN); // activate pull-up resistor on BTN
-
-    while ( true ) {
-        if ( rbi(BTN_PIN, BTN) ) {
-            sbi(LED_PORT, LED); // OUTPUT to HIGH
-            _delay_ms(DELAYTIME);
-
-            cbi(LED_PORT, LED); // OUTPUT to LOW
-            _delay_ms(DELAYTIME);
-        } else {
-            PORTD = 0x0;
-        }
-    }
-}
+blink:
+    sbi _SFR_IO_ADDR(PORTD), PD7
+    
+    ldi r24, LOW(1000)
+    ldi r25, HIGH(1000)
+    rcall delay
+    
+    cbi _SFR_IO_ADDR(PORTD), PD7
+    
+    ldi r24, LOW(1000)
+    ldi r25, HIGH(1000)
+    rcall delay
+    
+    rjmp loop

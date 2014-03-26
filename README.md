@@ -20,7 +20,7 @@ Blink
 
 Contains a basic standalone example. It's folder structure is:
 
-- src: put the project source files here. Meant only to C/C++ files.
+- src: put the project source files here. Meant only to C/C++/ASM files (supported extensions: .c .cpp .cc .cxx .S .sx .asm).
 - include: put the project header files here.
 - lib: create folders for each added libraries inside this folder. Add C/C++ and header files all together inside the library folder.
 

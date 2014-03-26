@@ -41,8 +41,9 @@ set(AVRDUDE  avrdude)
 set(CMAKE_SYSTEM_NAME  Generic)
 set(CMAKE_CXX_COMPILER ${AVRCPP})
 set(CMAKE_C_COMPILER   ${AVRC})
+set(CMAKE_ASM_COMPILER   ${AVRC})
 
-project (blink)
+project (blink C CXX ASM)
 
 # Important project paths
 set(BASE_PATH    "${${PROJECT_NAME}_SOURCE_DIR}")
@@ -54,7 +55,10 @@ set(LIB_DIR_PATH "${BASE_PATH}/lib")
 file(GLOB SRC_FILES "${SRC_PATH}/*.cpp"
                     "${SRC_PATH}/*.cc"
                     "${SRC_PATH}/*.c"
-                    "${SRC_PATH}/*.cxx")
+                    "${SRC_PATH}/*.cxx"
+                    "${SRC_PATH}/*.S"
+                    "${SRC_PATH}/*.sx"
+                    "${SRC_PATH}/*.asm")
 
 set(LIB_SRC_FILES)
 set(LIB_INC_PATH)
@@ -63,7 +67,10 @@ foreach(subdir ${LIBRARIES})
     file(GLOB lib_files "${subdir}/*.cpp"
                         "${subdir}/*.cc"
                         "${subdir}/*.c"
-                        "${subdir}/*.cxx")
+                        "${subdir}/*.cxx"
+                        "${subdir}/*.S"
+                        "${subdir}/*.sx"
+                        "${subdir}/*.asm")
     if(IS_DIRECTORY ${subdir})
         list(APPEND LIB_INC_PATH  "${subdir}")
     endif()
@@ -75,7 +82,7 @@ set(CSTANDARD "-std=gnu99")
 set(CDEBUG    "-gstabs -g -ggdb")
 set(CWARN     "-Wall -Wstrict-prototypes -Wl,--gc-sections -Wl,--relax")
 set(CTUNING   "-funsigned-char -funsigned-bitfields -fpack-struct -fshort-enums -ffunction-sections -fdata-sections")
-set(COPT      "-Os")
+set(COPT      "-Os -lm -lprintf_flt")
 set(CMCU      "-mmcu=${MCU}")
 set(CDEFS     "-DF_CPU=${F_CPU} -DBAUD=${BAUD}")
 
@@ -84,6 +91,7 @@ set(CXXFLAGS "${CMCU} ${CDEBUG} ${CDEFS} ${COPT} ${CTUNING}")
 
 set(CMAKE_C_FLAGS          "${CFLAGS}")
 set(CMAKE_CXX_FLAGS        "${CXXFLAGS}")
+set(CMAKE_ASM_FLAGS   "${CFLAGS}")
 
 # Arduino libraries setup
 macro(setup_lib lib)

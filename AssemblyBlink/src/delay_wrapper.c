@@ -20,41 +20,12 @@
  *  THE SOFTWARE.
  */
 
-#include <avr/io.h>
 #include <util/delay.h>
 
-#include "utils.h"
-
-#define LED      PD7
-#define LED_DDR  DDRD
-#define LED_PORT PORTD
-
-#define BTN      PB1   // pin number
-#define BTN_DDR  DDRB  // data direction
-#define BTN_PORT PORTB // for OUTPUT write
-#define BTN_PIN  PINB  // for INPUT read
-
-#define DELAYTIME 1000
-
-int main(void)
+void delay(uint16_t t)
 {
-    DDRD  = 0xFF; // all ports on D to OUTPUT
-    DDRB  = 0xFF; // all ports on B to OUTPUT
-    PORTD = 0x0;  // all ports on D to LOW
-    PORTB = 0x0;  // all ports on B to LOW
-
-    cbi(BTN_DDR, BTN);          // set BTN port to INPUT
-    sbi(BTN_PORT, BTN); // activate pull-up resistor on BTN
-
-    while ( true ) {
-        if ( rbi(BTN_PIN, BTN) ) {
-            sbi(LED_PORT, LED); // OUTPUT to HIGH
-            _delay_ms(DELAYTIME);
-
-            cbi(LED_PORT, LED); // OUTPUT to LOW
-            _delay_ms(DELAYTIME);
-        } else {
-            PORTD = 0x0;
-        }
+    uint16_t i = t;
+    while( i-- ) {
+        _delay_ms(1);
     }
 }
