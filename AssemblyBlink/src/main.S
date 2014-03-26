@@ -30,41 +30,41 @@
 
 .global main
 
-.extern delay
+.extern delay ; defined in delay_wrapper.c
 
 #define HIGH(x) x >> 8
 #define LOW(x)  x & 0xFF
 
 main:
     ldi r16, 0xFF
-    out _SFR_IO_ADDR(DDRB), r16
-    out _SFR_IO_ADDR(DDRD), r16
+    out _SFR_IO_ADDR(DDRB), r16  ; Set all pins on port B to OUTPUT
+    out _SFR_IO_ADDR(DDRD), r16  ; Set all pins on port D to OUTPUT
     
     ldi r16, 0x0
-    out _SFR_IO_ADDR(PORTB), r16
-    out _SFR_IO_ADDR(PORTD), r16
+    out _SFR_IO_ADDR(PORTB), r16 ; Set all pins on port B to LOW
+    out _SFR_IO_ADDR(PORTD), r16 ; Set all pins on port D to LOW
     
-    cbi _SFR_IO_ADDR(DDRB),  PB1
-    sbi _SFR_IO_ADDR(PORTB), PB1
+    cbi _SFR_IO_ADDR(DDRB),  PB1 ; Set PB1 to INPUT
+    sbi _SFR_IO_ADDR(PORTB), PB1 ; Activate pull-up resistor on PB1
     
 loop:
-    sbic _SFR_IO_ADDR(PINB), PB1
-    rjmp blink
+    sbic _SFR_IO_ADDR(PINB), PB1 ; If PB1 is LOW, skip next line
+    rjmp blink                   ; jump to blink
     
-    cbi _SFR_IO_ADDR(PORTD), PD7
-    rjmp loop
+    cbi _SFR_IO_ADDR(PORTD), PD7 ; Set PD7 to LOW
+    rjmp loop                    ; jump to loop
 
 blink:
-    sbi _SFR_IO_ADDR(PORTD), PD7
+    sbi _SFR_IO_ADDR(PORTD), PD7 ; Set PD7 to HIGH
     
-    ldi r24, LOW(1000)
+    ldi r24, LOW(1000)           ; Write 1000 to the registers r24 and r25, reversed
     ldi r25, HIGH(1000)
-    rcall delay
+    rcall delay                  ; call delay (C function)
     
-    cbi _SFR_IO_ADDR(PORTD), PD7
+    cbi _SFR_IO_ADDR(PORTD), PD7 ; Set PD7 to LOW
     
-    ldi r24, LOW(1000)
+    ldi r24, LOW(1000)           ; Write 1000 to the registers r24 and r25, reversed
     ldi r25, HIGH(1000)
-    rcall delay
+    rcall delay                  ; call delay (C function)
     
-    rjmp loop
+    rjmp loop                    ; jump to loop
