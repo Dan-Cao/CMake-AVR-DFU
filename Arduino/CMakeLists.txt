@@ -57,6 +57,7 @@ file(GLOB SRC_FILES "${SRC_PATH}/*.cpp"
                     "${SRC_PATH}/*.c"
                     "${SRC_PATH}/*.cxx"
                     "${SRC_PATH}/*.S"
+                    "${SRC_PATH}/*.s"
                     "${SRC_PATH}/*.sx"
                     "${SRC_PATH}/*.asm")
 
@@ -69,6 +70,7 @@ foreach(subdir ${LIBRARIES})
                         "${subdir}/*.c"
                         "${subdir}/*.cxx"
                         "${subdir}/*.S"
+                        "${subdir}/*.s"
                         "${subdir}/*.sx"
                         "${subdir}/*.asm")
     if(IS_DIRECTORY ${subdir})
