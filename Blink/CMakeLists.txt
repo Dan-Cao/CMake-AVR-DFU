@@ -17,13 +17,13 @@ set(BAUD  9600)
 add_definitions(-DF_CPU=${F_CPU})
 
 # program names
-set(AVRCPP   ${BIN_LOC}avr-g++.exe)
-set(AVRC     ${BIN_LOC}avr-gcc.exe)
-set(AVRSTRIP ${BIN_LOC}avr-strip.exe)
-set(OBJCOPY  ${BIN_LOC}avr-objcopy.exe)
-set(OBJDUMP  ${BIN_LOC}avr-objdump.exe)
-set(AVRSIZE  ${BIN_LOC}avr-size.exe)
-set(AVRDUDE  ${BIN_LOC}avrdude.exe)
+set(AVRCPP   ${BIN_LOC}avr-g++)
+set(AVRC     ${BIN_LOC}avr-gcc)
+set(AVRSTRIP ${BIN_LOC}avr-strip)
+set(OBJCOPY  ${BIN_LOC}avr-objcopy)
+set(OBJDUMP  ${BIN_LOC}avr-objdump)
+set(AVRSIZE  ${BIN_LOC}avr-size)
+set(AVRDUDE  ${BIN_LOC}avrdude)
 set(DFU_PROG ${DFU_PROG_LOC}dfu-programmer)
 
 # Sets the compiler
