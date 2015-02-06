@@ -2,23 +2,29 @@ cmake_minimum_required(VERSION 2.8)
 
 set(PROG_TYPE avrisp)
 set(USBPORT /dev/tty.usbmodem411)
+
+# Locations of binaries
+set(BIN_LOC "C:/WinAVR-20100110/bin/")
+set(DFU_PROG_LOC "C:/Users/Daniel/Apps/dfu-programmer-win-0.7.0/")
+
 # extra arguments to avrdude: baud rate, chip type, -F flag, etc.
 set(PROG_ARGS -b 19200 -P ${USBPORT})
 
 # Variables regarding the AVR chip
-set(MCU   atmega328p)
-set(F_CPU 16000000)
+set(MCU   at90usb1286)
+set(F_CPU 8000000)
 set(BAUD  9600)
 add_definitions(-DF_CPU=${F_CPU})
 
 # program names
-set(AVRCPP   avr-g++)
-set(AVRC     avr-gcc)
-set(AVRSTRIP avr-strip)
-set(OBJCOPY  avr-objcopy)
-set(OBJDUMP  avr-objdump)
-set(AVRSIZE  avr-size)
-set(AVRDUDE  avrdude)
+set(AVRCPP   ${BIN_LOC}avr-g++.exe)
+set(AVRC     ${BIN_LOC}avr-gcc.exe)
+set(AVRSTRIP ${BIN_LOC}avr-strip.exe)
+set(OBJCOPY  ${BIN_LOC}avr-objcopy.exe)
+set(OBJDUMP  ${BIN_LOC}avr-objdump.exe)
+set(AVRSIZE  ${BIN_LOC}avr-size.exe)
+set(AVRDUDE  ${BIN_LOC}avrdude.exe)
+set(DFU_PROG ${DFU_PROG_LOC}dfu-programmer)
 
 # Sets the compiler
 # Needs to come before the project function
@@ -96,6 +102,10 @@ add_custom_target(flash_usbasp  ${AVRDUDE} -c usbasp -p ${MCU} -U flash:w:${PROJ
 add_custom_target(flash_ardisp  ${AVRDUDE} -c avrisp -p ${MCU} -b 19200 -P ${USBPORT} -U flash:w:${PROJECT_NAME}.hex DEPENDS hex)
 add_custom_target(flash_109     ${AVRDUDE} -c avr109 -p ${MCU} -b 9600 -P ${USBPORT} -U flash:w:${PROJECT_NAME}.hex DEPENDS hex)
 add_custom_target(flash_eeprom  ${AVRDUDE} -c ${PROG_TYPE} -p ${MCU} ${PROG_ARGS} -U eeprom:w:${PROJECT_NAME}.hex DEPENDS eeprom)
+add_custom_target(flash_dfu     ${DFU_PROG} ${MCU} erase
+                                COMMAND ${DFU_PROG} ${MCU} flash ${PROJECT_NAME}.hex
+                                COMMAND ${DFU_PROG} ${MCU} reset
+                                DEPENDS hex)
 # Fuses (For ATMega328P-PU, Calculated using http://eleccelerator.com/fusecalc/fusecalc.php?chip=atmega328p)
 add_custom_target(reset         ${AVRDUDE} -c ${PROG_TYPE} -p ${MCU} ${PROG_ARGS} -e)
 add_custom_target(fuses_1mhz    ${AVRDUDE} -c ${PROG_TYPE} -p ${MCU} ${PROG_ARGS} -U lfuse:w:0x62:m)
@@ -106,7 +116,7 @@ add_custom_target(set_eeprom_save_fuse   ${AVRDUDE} -c ${PROG_TYPE} -p ${MCU} ${
 add_custom_target(clear_eeprom_save_fuse ${AVRDUDE} -c ${PROG_TYPE} -p ${MCU} ${PROG_ARGS} -U hfuse:w:0xD9:m)
 # Utilities targets
 add_custom_target(avr_terminal  ${AVRDUDE} -c ${PROG_TYPE} -p ${MCU} ${PROG_ARGS} -nt)
-
+add_custom_target(dfu_reset     ${DFU_PROG} ${MCU} reset)
 set_directory_properties(PROPERTIES ADDITIONAL_MAKE_CLEAN_FILES "${PROJECT_NAME}.hex;${PROJECT_NAME}.eeprom;${PROJECT_NAME}.lst")
 
 # Config logging
