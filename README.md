@@ -1,6 +1,8 @@
 CMake AVR
 =========
 
+Note: this project extends the orginal by acristoffers with some tweaks to make this work with Windows, and now supports programming using dfu-programmer. Be sure to set the directories for the binaries!
+
 This project sets up a CMake project to compile AVR C/C++ source code.
 
 It was made to be used with ATMega328P, but can be configured to others (easily, I think, just change some variables in the file).
